@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "target": "ES2019",
+        "module": "CommonJS",
+        "outDir": "./dist",
+        "rootDir": "./src",
+        // Import non-ES modules as default imports.
+        "esModuleInterop": true,
+        // Process & infer types from .js files.
+        "allowJs": false,
+        // Enable strictNullChecks & noImplicitAny.
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "strict": true,
+        // Import .json files
+        "resolveJsonModule": true,
+        // Search under node_modules for non-relative imports.
+        "moduleResolution": "node",
+        "strictFunctionTypes": false,
+        "noImplicitThis": false,
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
