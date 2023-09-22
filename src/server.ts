@@ -7,7 +7,11 @@ import connection from "./database/connection";
 
 const start = async (): Promise<void> => {
     try {
-        await connection.sync();
+        await connection.initialize().then(() => {
+            console.log("Data Source has been initialized!")
+        }).catch((err) => {
+            console.error("Error during Data Source initialization:", err)
+        });
         app.listen(3000, () => {
             Logger.info(`server running on port : ${port}`);
         });

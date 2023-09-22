@@ -18,6 +18,8 @@
         "moduleResolution": "node",
         "strictFunctionTypes": false,
         "noImplicitThis": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
     },
     "include": [
         "src/**/*"
