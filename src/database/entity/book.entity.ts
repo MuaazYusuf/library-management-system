@@ -1,8 +1,9 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
 import { ShelfLocation } from "../../data/enums";
 import { Exclude, Transform } from 'class-transformer';
 import moment from "moment";
 import { DatabaseConstants } from "../../core/database-constants";
+import { Borrowing } from "./borrowing.entity";
 
 
 @Unique(['isbn'])
@@ -48,6 +49,9 @@ export class Book {
         enum: ShelfLocation,
     })
     declare shelfLocation: ShelfLocation;
+
+    @OneToMany(() => Borrowing, (borrowing) => borrowing.book)
+    declare borrowings: Borrowing[];
 
     @Transform(({ value }) => moment(value).toISOString())
     @CreateDateColumn({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })

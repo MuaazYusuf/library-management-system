@@ -5,7 +5,7 @@ import validator, { ValidationSource } from '../../helpers/validator';
 import { SuccessMsgResponse, SuccessResponse } from '../../core/ApiResponse';
 import getByIdSchema from '../get-by-id.schema';
 import Container from 'typedi';
-import { BookService } from '../../service';
+import { BookService, BorrowingService } from '../../service';
 import { plainToClass } from 'class-transformer';
 import { CreateBookResponse } from './response/create-book.response';
 import updateBookSchema from './schema/update-book.schema';
@@ -13,10 +13,12 @@ import getBooksSchema from './schema/get-books.schema';
 import { GetBooksFilter } from './filter/get-books-filter';
 import { GetBooksQueryBuilder } from './filter/builder/get-books-query.builder';
 import { IPagination } from '../pagination.interface';
+import borrowBookSchema from './schema/borrow-book.schema';
 
 const router = express.Router();
 
 const bookService = Container.get(BookService);
+const borrowingService = Container.get(BorrowingService);
 
 router.post('/',
     validator(createBookSchema),
@@ -51,13 +53,29 @@ router.put('/:id',
 router.get('/',
     validator(getBooksSchema, ValidationSource.QUERY),
     asyncHandler(async (req, res) => {
-        const builder = new GetBooksQueryBuilder();        
+        const builder = new GetBooksQueryBuilder();
         const query = plainToClass(GetBooksFilter, req.query);
-        const pagination: IPagination = {pageSize: query.pageSize, pageIndex: query.pageIndex}
+        const pagination: IPagination = { pageSize: query.pageSize, pageIndex: query.pageIndex }
         const { whereConditions, parameters } = builder.withName(query.name)
-        .withAuthor(query.author)
-        .withISBN(query.isbn).build();
+            .withAuthor(query.author)
+            .withISBN(query.isbn).build();
         new SuccessResponse('Success', await bookService.getBookByFilters(whereConditions, parameters, pagination)).send(res);
+    })
+)
+
+router.post('/:id/user/:userId/borrow',
+    validator(borrowBookSchema, ValidationSource.PARAM),
+    asyncHandler(async (req, res) => {
+        await borrowingService.borrowBook(parseInt(req.params.id), parseInt(req.params.userId));
+        return new SuccessMsgResponse('Borrowed successfully').send(res);
+    })
+)
+
+router.put('/:id/user/:userId/return',
+    validator(borrowBookSchema, ValidationSource.PARAM),
+    asyncHandler(async (req, res) => {
+        await borrowingService.returnBook(parseInt(req.params.id), parseInt(req.params.userId));
+        return new SuccessMsgResponse('Returned successfully').send(res);
     })
 )
 

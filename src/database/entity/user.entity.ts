@@ -1,7 +1,8 @@
-import { BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Entity, Index, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Entity, Index, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
 import { DatabaseConstants } from "../../core/database-constants";
 import moment from "moment";
 import { Transform } from "class-transformer";
+import { Borrowing } from "./borrowing.entity";
 
 @Unique(['email'])
 @Entity({ name: "users" })
@@ -23,6 +24,9 @@ export class User {
     })
     @Index('email')
     declare email: string;
+
+    @OneToMany(() => Borrowing, (borrowing) => borrowing.user)
+    declare borrowings: Borrowing[];
 
     @Transform(({ value }) => moment(value).toISOString())
     @CreateDateColumn({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })

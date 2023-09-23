@@ -6,7 +6,7 @@ import { IPagination } from "../../routes/pagination.interface";
 
 @Service()
 export class BookService {
-    bookRepository: typeof BookRepository = BookRepository
+    bookRepository: typeof BookRepository = BookRepository;
 
     async create(item: {}): Promise<Book> {
         return this.bookRepository.save(item);
@@ -14,7 +14,7 @@ export class BookService {
 
     async getBookById(id: number): Promise<Book | null> {
         const book = await this.bookRepository.findOneBy({ id });
-        if (!book) throw new NotFoundError();
+        if (!book) throw new NotFoundError('Book not found');
         return book;
     }
 
