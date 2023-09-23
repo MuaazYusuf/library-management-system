@@ -1,6 +1,8 @@
 import { Book } from "../../database/entity/book.entity";
 import { Service } from "typedi";
 import { BookRepository } from "../../database/repository";
+import { NotFoundError } from "../../core/ApiError";
+import { IPagination } from "../../routes/pagination.interface";
 
 @Service()
 export class BookService {
@@ -11,6 +13,22 @@ export class BookService {
     }
 
     async getBookById(id: number): Promise<Book | null> {
-        return await this.bookRepository.findOneBy({ id });
+        const book = await this.bookRepository.findOneBy({ id });
+        if (!book) throw new NotFoundError();
+        return book;
+    }
+
+    async deleteBookById(id: number) {
+        await this.getBookById(id);
+        await this.bookRepository.delete(id);
+    }
+
+    async updateBookById(id: number, data: {}) {
+        await this.getBookById(id);
+        return await this.bookRepository.save({id, ...data});
+    }
+
+    async getBookByFilters(whereConditions: string, parameters: Record<string, any>, pagination: IPagination) {
+        return await this.bookRepository.getBooks(whereConditions, parameters, pagination);
     }
 }
