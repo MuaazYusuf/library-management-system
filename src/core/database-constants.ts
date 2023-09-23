@@ -7,5 +7,6 @@ export class DatabaseConstants {
     public static ISBN_LENGTH = 20;
     public static ENUM_LENGTH = 200;
     public static CURRENT_TIMESTAMP = 'CURRENT_TIMESTAMP';
+    public static EMAIL_LENGTH = 50;
   }
   

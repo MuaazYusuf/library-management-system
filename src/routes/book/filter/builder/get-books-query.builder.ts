@@ -1,4 +1,4 @@
-import { BaseQueryBuilder } from "../../base-query.builder";
+import { BaseQueryBuilder } from "../../../base-query.builder";
 
 export class GetBooksQueryBuilder extends BaseQueryBuilder {
     constructor() {

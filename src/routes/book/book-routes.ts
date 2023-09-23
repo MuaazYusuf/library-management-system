@@ -3,15 +3,15 @@ import asyncHandler from '../../helpers/asyncHelper'
 import createBookSchema from './schema/create-book.schema';
 import validator, { ValidationSource } from '../../helpers/validator';
 import { SuccessMsgResponse, SuccessResponse } from '../../core/ApiResponse';
-import getBookByIdSchema from './schema/get-book-by-id.schema';
+import getByIdSchema from '../get-by-id.schema';
 import Container from 'typedi';
 import { BookService } from '../../service';
 import { plainToClass } from 'class-transformer';
 import { CreateBookResponse } from './response/create-book.response';
 import updateBookSchema from './schema/update-book.schema';
 import getBooksSchema from './schema/get-books.schema';
-import { GetBooksFilter } from './interface/get-books-filter';
-import { GetBooksQueryBuilder } from './filter/get-books-query.builder';
+import { GetBooksFilter } from './filter/get-books-filter';
+import { GetBooksQueryBuilder } from './filter/builder/get-books-query.builder';
 import { IPagination } from '../pagination.interface';
 
 const router = express.Router();
@@ -26,14 +26,14 @@ router.post('/',
 )
 
 router.get('/:id',
-    validator(getBookByIdSchema, ValidationSource.PARAM),
+    validator(getByIdSchema, ValidationSource.PARAM),
     asyncHandler(async (req, res) => {
         new SuccessResponse('Success', await bookService.getBookById(parseInt(req.params.id))).send(res);
     })
 )
 
 router.delete('/:id',
-    validator(getBookByIdSchema, ValidationSource.PARAM),
+    validator(getByIdSchema, ValidationSource.PARAM),
     asyncHandler(async (req, res) => {
         await bookService.deleteBookById(parseInt(req.params.id));
         new SuccessMsgResponse('Success').send(res);
@@ -41,7 +41,7 @@ router.delete('/:id',
 )
 
 router.put('/:id',
-    validator(getBookByIdSchema, ValidationSource.PARAM),
+    validator(getByIdSchema, ValidationSource.PARAM),
     validator(updateBookSchema),
     asyncHandler(async (req, res) => {
         new SuccessResponse('Success', await bookService.updateBookById(parseInt(req.params.id), req.body)).send(res);

@@ -3,6 +3,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import routes from './routes';
 import { ApiError, ErrorType, InternalError, NotFoundError } from './core/ApiError';
 import { environment } from './config';
+import { QueryFailedError } from 'typeorm';
+import { BadRequestResponse, InternalErrorResponse } from './core/ApiResponse';
 
 process.on('uncaughtException', (e) => {
     Logger.error(e);
@@ -29,6 +31,13 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
             Logger.error(
                 `500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,
             );
+    } else if (err instanceof QueryFailedError) {
+        switch (err.driverError.code) {
+            case 'ER_DUP_ENTRY':                
+                return new BadRequestResponse(err.message.split("'", 2)[1] + ' already exists').send(res);
+            default:
+                return new InternalErrorResponse(err.message).send(res);
+        }
     } else {
         Logger.error(
             `500 - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`,

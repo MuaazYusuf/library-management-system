@@ -1,5 +1,4 @@
 import { db } from "../config";
-import { Book } from "./entity/book.entity";
 import { DataSource } from "typeorm";
 
 const connection = new DataSource({
@@ -10,7 +9,7 @@ const connection = new DataSource({
     database: db.name,
     logging: false,
     port: parseInt(db.port!),
-    entities: [Book],
+    entities: [__dirname + '/../database/**/*.entity{.ts,.js}'],
     synchronize: true,
 });
 
