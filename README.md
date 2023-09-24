@@ -1,6 +1,6 @@
 ## How to build and run this project
 * Install Without Docker
-    * Install MYSQL
+    * Install MYSQL. [Find Instructions Here](https://dev.mysql.com/doc/refman/8.0/en/windows-installation.html).
     * Add the environment variables to the .env file
     * Execute `npm install`
     * Execute `npm start`
