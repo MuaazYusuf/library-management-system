@@ -22,6 +22,9 @@ export class Borrowing {
     @Column({ name: 'is_returned', default: false })
     declare isReturned: boolean;
 
+    @Column({ name: 'is_due', default: false})
+    declare isDue: boolean;
+
     @Transform(({ value }) => moment(value).toISOString())
     @CreateDateColumn({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
     declare createdAt: Date;

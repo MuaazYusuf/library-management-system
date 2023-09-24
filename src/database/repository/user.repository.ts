@@ -6,8 +6,8 @@ export const UserRepository = connection.getRepository(User).extend({
     async getUsers(whereConditions: string, parameters: Record<string, any>, pagination: IPagination) {
         return await this.createQueryBuilder()
             .where(whereConditions, parameters)
-            .skip(pagination.pageIndex)
-            .take(pagination.pageSize)
+            .offset(pagination.pageIndex)
+            .limit(pagination.pageSize)
             .getMany();
     }
 })

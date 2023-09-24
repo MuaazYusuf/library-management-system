@@ -5,6 +5,8 @@ import { ApiError, ErrorType, InternalError, NotFoundError } from './core/ApiErr
 import { environment } from './config';
 import { QueryFailedError } from 'typeorm';
 import { BadRequestResponse, InternalErrorResponse } from './core/ApiResponse';
+import { CronJobs } from './cronjobs';
+import Container from 'typedi';
 
 process.on('uncaughtException', (e) => {
     Logger.error(e);
@@ -22,6 +24,9 @@ app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => next(new NotFoundError()));
+
+// Start cron jobs
+Container.get(CronJobs).startCronJobs();
 
 // Middleware Error Handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
