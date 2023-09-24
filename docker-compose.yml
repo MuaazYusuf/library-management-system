@@ -1,0 +1,36 @@
+version: '3'
+networks:
+  dev:
+    driver: bridge
+
+services:
+  # Node.js application service
+  app:
+    build:
+      context: .
+    container_name: backend
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - '$PORT:$PORT'
+    depends_on:
+      - db # Ensure the database service is started before the app
+    networks:
+      - dev
+
+  # MySQL database service
+  db:
+    image: mysql:latest
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: '$DB_PASSWORD'
+      MYSQL_DATABASE: '$DB_NAME'
+    ports:
+      - "$DB_PORT:$DB_PORT"
+    volumes:
+      - mysql_data:/var/lib/mysql # Persisting data locally
+    networks:
+      - dev
+
+volumes:
+  mysql_data: 

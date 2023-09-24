@@ -33,7 +33,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
             );
     } else if (err instanceof QueryFailedError) {
         switch (err.driverError.code) {
-            case 'ER_DUP_ENTRY':                
+            case 'ER_DUP_ENTRY':
                 return new BadRequestResponse(err.message.split("'", 2)[1] + ' already exists').send(res);
             default:
                 return new InternalErrorResponse(err.message).send(res);
